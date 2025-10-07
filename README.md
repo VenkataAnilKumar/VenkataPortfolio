@@ -10,7 +10,6 @@ This repository showcases real-world, production-quality projects designed to de
 
 | Project Name                  | Description                                 | Tech Stack         | Link                  |
 |-------------------------------|---------------------------------------------|--------------------|-----------------------|
-| Online Education Platform     | Scalable platform for online learning       | Python, React, AWS | [View Project](online-education-platform/) |
 | (Add more projects here)      |                                             |                    |                       |
 
 ---
