@@ -1,60 +1,73 @@
-# 🏗️ Software Engineer Portfolio (Backend + AI/LLM + Enterprise)
+# 🏗️ Project Portfolio
 
-10 projects demonstrating **backend engineering, cloud infrastructure, multi-agent LLM orchestration, and enterprise problem solving**.  
+This portfolio demonstrates expertise in **backend engineering, cloud-native infrastructure, and AI/LLM multi-agent orchestration**. It includes **3 end-to-end production-ready projects** and **7 system design case studies**, highlighting problem-solving at enterprise scale.  
 
-> **Note:** All projects **reuse existing AI/LLM models**. No new model training. Focus: **backend, platform, LLMs, multi-agent orchestration**.  
+> Focus: **Backend, platform, AI-Large Language Models (LLMs), multi-agent orchestration**. All projects reuse **existing AI models** — no new model training.
+
+---
+
+## ⚡ Key Skills
+
+Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, OpenAI GPT-4, Hugging Face, LangChain
 
 ---
 
 ## 🔹 End-to-End Builds (3)
 
-| Project | Summary / Business Value | My Role / Contributions | Tech Stack | Folder Link |
-|--------|------------------------|-----------------------|------------|------------|
-| 🛡️ **Multi-Agent Dispute Resolution System** | Automates dispute classification and resolution in fintech, reducing manual workload and potential revenue loss. | Designed multi-agent orchestration, integrated LLMs, implemented backend APIs, containerized with Docker & Kubernetes | 🐍 Python (FastAPI), ⚡ Go, 🗄️ PostgreSQL, 🔑 Redis, ☁️ Docker/K8s, 🤖 OpenAI GPT-4, Hugging Face, LangChain | [llm-dispute-resolution](BUILT_PROJECTS/llm-gateway) |
-| 📦 **LLM-Based Product Recommendation & Inventory Optimization Engine** | Generates personalized e-commerce recommendations and optimizes inventory to reduce overstock & out-of-stock scenarios. | Integrated vector embeddings for recommendations, coordinated agents for inventory simulation, developed API endpoints | 🐍 Python, ⚡ Go, 🗄️ PostgreSQL, 🔑 Redis, ☁️ Docker/K8s, 🤖 OpenAI embeddings, FAISS/ChromaDB, LangChain | [product-recommendation](BUILT_PROJECTS/k8s-ml-operator) |
-| 📝 **Content Moderation & Engagement Orchestration System** | Automates content moderation and engagement scoring for social platforms, improving compliance and user safety. | Built multi-agent system, integrated LLM moderation, implemented backend APIs, orchestrated Rust services for performance | 🐍 Python, 🦀 Rust, 🗄️ PostgreSQL, 🔑 Redis, ☁️ Docker/K8s, 🤖 OpenAI GPT-4, Hugging Face, LangChain | [content-moderation](BUILT_PROJECTS/distributed-tracing) |
+### 1. Multi-Agent Dispute Resolution System (Fintech)  
+**Value:** Automates dispute classification and resolution, reducing manual effort and potential revenue loss.  
+**Role/Contributions:** Designed multi-agent orchestration, integrated LLMs, implemented backend APIs, containerized services.  
+**Tech Stack:** Python (FastAPI), Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI GPT-4, Hugging Face, LangChain  
+**Folder:** [BUILT_PROJECTS/llm-dispute-resolution](BUILT_PROJECTS/llm-dispute-resolution)
 
-> **Diagram placeholder:** `![Architecture Diagram](BUILT_PROJECTS/diagram.png)`
+### 2. Product Recommendation & Inventory Optimization Engine (E-commerce)  
+**Value:** Generates personalized recommendations and optimizes inventory to reduce overstock/out-of-stock scenarios.  
+**Role/Contributions:** Implemented vector embeddings, coordinated multi-agent inventory simulation, developed backend APIs.  
+**Tech Stack:** Python, Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI embeddings, FAISS/ChromaDB, LangChain  
+**Folder:** [BUILT_PROJECTS/product-recommendation](BUILT_PROJECTS/product-recommendation)
+
+### 3. Content Moderation & Engagement Orchestration System (Social)  
+**Value:** Automates moderation and engagement scoring, improving platform compliance and user safety.  
+**Role/Contributions:** Built multi-agent moderation system, backend APIs, orchestrated Rust services for performance.  
+**Tech Stack:** Python, Rust, PostgreSQL, Redis, Docker/Kubernetes, OpenAI GPT-4, Hugging Face, LangChain  
+**Folder:** [BUILT_PROJECTS/content-moderation](BUILT_PROJECTS/content-moderation)
 
 ---
 
 ## 🔹 System Design Case Studies (7)
 
-### **AI-Focused (3)**
+### AI-Focused (3)
+1. **Codebase Intelligence & Refactoring Engine** – LLM-based code analysis and refactoring recommendations.  
+   **Role/Contributions:** Designed multi-agent analysis system, orchestrated backend services.  
+   **Folder:** [SYSTEM_DESIGNS/codebase-architecture.md](SYSTEM_DESIGNS/codebase-architecture.md)
 
-| Project | Summary / Business Value | My Role / Contributions | Tech Stack | Folder Link |
-|----------------|----------------|-----------------|------------|------------|
-| 💻 **Codebase Intelligence & Refactoring Engine** | Analyzes codebases to recommend refactors & improve maintainability. | Designed LLM-based analysis agents, orchestrated backend services | 🐍 Python, ⚡ Go/Rust, 🗄️ PostgreSQL, ☁️ Docker, 🤖 OpenAI GPT-4, Hugging Face, LangChain | [code-intelligence](SYSTEM_DESIGNS/codebase-architecture.md) |
-| ⚡ **Self-Healing LLM Pipeline Orchestrator** | Monitors multi-agent LLM pipelines and recovers automatically from failures. | Architected fallback/retry logic, agent orchestration, monitoring integration | 🐍 Python, ☁️ Kubernetes, Prometheus, Grafana, Docker, 🤖 OpenAI GPT-4, LangChain | [llm-pipeline](SYSTEM_DESIGNS/llm-pipeline.md) |
-| 🌐 **OpenAPI Dynamic Multi-Agent Orchestration System** | Dynamically routes API requests to specialized LLM agents, improving response relevance. | Designed multi-agent routing, API orchestration, integration with existing LLMs | 🐍 Python, ⚡ Go, 🔑 Redis, ☁️ Docker, 🤖 OpenAI GPT-4, Hugging Face, LangChain | [multi-agent-api](SYSTEM_DESIGNS/multi-agent-orchestration.md) |
+2. **Self-Healing LLM Pipeline Orchestrator** – Monitors pipelines, auto-recovers from failures.  
+   **Role/Contributions:** Architected fallback/retry logic, multi-agent orchestration, monitoring integration.  
+   **Folder:** [SYSTEM_DESIGNS/llm-pipeline.md](SYSTEM_DESIGNS/llm-pipeline.md)
 
-### **Enterprise-Focused (4)**
+3. **OpenAPI Dynamic Multi-Agent Orchestration System** – Routes API requests to specialized LLM agents.  
+   **Role/Contributions:** Designed agent routing and orchestration, API-level integration.  
+   **Folder:** [SYSTEM_DESIGNS/multi-agent-orchestration.md](SYSTEM_DESIGNS/multi-agent-orchestration.md)
 
-| Project | Summary / Business Value | My Role / Contributions | Tech Stack | Folder Link |
-|----------------|----------------|-----------------|------------|------------|
-| 💳 **LLM-Based Fraud Pattern Detection Engine** | Detects anomalous financial transactions, preventing potential losses. | Built multi-agent detection system, integrated LLM reasoning, backend APIs | 🐍 Python, ⚡ Go, 🗄️ PostgreSQL, 🔑 Redis, ☁️ Docker/K8s, 🤖 OpenAI GPT-4, LangChain | [fraud-detection](SYSTEM_DESIGNS/fraud-detection-system.md) |
-| ⚖️ **Smart Contract Analysis & Breach Prediction System** | Analyzes legal contracts to predict potential breaches and highlight risky clauses. | Architected LLM agent system, designed backend API, data storage integration | 🐍 Python, ⚡ Go/Rust, 🗄️ PostgreSQL, ☁️ Docker, 🤖 OpenAI GPT-4, Hugging Face, LangChain | [smart-contracts](SYSTEM_DESIGNS/contract-analysis.md) |
-| ☁️ **Cloud Resource Optimization Engine** | Dynamically allocates cloud resources based on usage and predicted demand to reduce cost. | Built orchestration logic, Kubernetes integration, resource simulation | 🐍 Python, ⚡ Go, ☁️ Kubernetes, Terraform, Prometheus, Grafana, 🤖 OpenAI GPT-4, LangChain | [cloud-optimization](SYSTEM_DESIGNS/cloud-resource-optimization.md) |
-| ⚙️ **Workflow Bottleneck Detection & Automation Advisor** | Identifies bottlenecks in enterprise workflows and suggests automation improvements. | Designed backend agents, integrated orchestration logic, LLM advisory recommendations | 🐍 Python, ⚡ Go/Rust, ☁️ Kubernetes/Docker, 🤖 OpenAI GPT-4, LangChain | [workflow-bottleneck](SYSTEM_DESIGNS/workflow-bottleneck.md) |
+### Enterprise-Focused (4)
+1. **LLM-Based Fraud Pattern Detection Engine (Fintech)** – Detects anomalous financial transactions.  
+   **Role/Contributions:** Built multi-agent detection system, integrated reasoning agents, designed backend workflow.  
+   **Folder:** [SYSTEM_DESIGNS/fraud-detection-system.md](SYSTEM_DESIGNS/fraud-detection-system.md)
+
+2. **Smart Contract Analysis & Breach Prediction System (Legal)** – Predicts potential contract breaches.  
+   **Role/Contributions:** Architected multi-agent contract analysis system, designed backend workflow.  
+   **Folder:** [SYSTEM_DESIGNS/contract-analysis.md](SYSTEM_DESIGNS/contract-analysis.md)
+
+3. **Cloud Resource Optimization Engine (Enterprise)** – Dynamically allocates cloud resources based on usage/demand.  
+   **Role/Contributions:** Designed orchestration system, simulated demand-driven resource allocation.  
+   **Folder:** [SYSTEM_DESIGNS/cloud-resource-optimization.md](SYSTEM_DESIGNS/cloud-resource-optimization.md)
+
+4. **Workflow Bottleneck Detection & Automation Advisor (Enterprise)** – Identifies workflow bottlenecks and suggests improvements.  
+   **Role/Contributions:** Designed backend orchestration and advisory agents, mapped enterprise workflow improvements.  
+   **Folder:** [SYSTEM_DESIGNS/workflow-bottleneck.md](SYSTEM_DESIGNS/workflow-bottleneck.md)
 
 ---
 
-## 📝 Blog
-
-| File | Notes |
-|------|-------|
-| Building LLM Circuit Breakers | Explains LLM reliability patterns, multi-agent orchestration lessons from projects; backend-focused implementation |
-| Kubernetes Operator Patterns | Explains k8s operator patterns used in Smart Product Recommendation & ML Operator project; cloud-native focus |
-
----
-
-## ⚡ Notes & Strategy
-
-- **End-to-End Builds:** Demonstrate **production-ready systems**, integration, orchestration.  
-- **System Designs:** Highlight **architecture, trade-offs, agent/LLM design, monitoring, cloud infra**.  
-- **Backend / Platform:** Python, Go, Rust, or hybrid for high concurrency and scalability.  
-- **Cloud / Infra:** AWS/GCP/Azure, Kubernetes, Docker, Terraform, Prometheus, Grafana.  
-- **AI Tech Stack:** OpenAI GPT-4, Hugging Face Transformers, LangChain, FAISS/ChromaDB.  
-- **Business Value:** Each project emphasizes measurable impact and problem-solving relevance.  
-
-This portfolio demonstrates full-spectrum skills in **backend, cloud, platform engineering, AI-Large Language Models, and multi-agent orchestration**.
+## 🔹 Blog / Notes
+- **Building LLM Circuit Breakers** – Lessons from multi-agent orchestration, backend reliability patterns.  
+- **Kubernetes Operator Patterns** – Cloud-native operator design for ML and recommendation projects.  
