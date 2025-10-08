@@ -1,6 +1,6 @@
 # 🏗️ Project Portfolio
 
-This portfolio demonstrates expertise in **backend engineering, cloud-native infrastructure, and AI/LLM multi-agent orchestration**. It includes **3 end-to-end production-ready projects** and **7 system design case studies**, highlighting problem-solving at enterprise scale.  
+This portfolio demonstrates expertise in **backend engineering, cloud-native infrastructure, and AI/LLM multi-agent orchestration**. It includes **end-to-end production-ready projects** and **system design case studies**, highlighting problem-solving at enterprise scale.  
 
 > Focus: **Backend, platform, AI-Large Language Models (LLMs), multi-agent orchestration**. All projects reuse **existing AI models** — no new model training.
 
@@ -12,7 +12,7 @@ Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, Ope
 
 ---
 
-## 🔹 End-to-End Builds (3)
+## 🔹 End-to-End Builds
 
 - **Multi-Agent Dispute Resolution System (Fintech)**  
   *Value:* Automates dispute classification and resolution, reducing manual effort and potential revenue loss.  
@@ -34,14 +34,14 @@ Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, Ope
 
 ---
 
-## 🔹 System Design Case Studies (7)
+## 🔹 System Design Case Studies
 
-### AI-Focused (3)
+### AI-Focused
 - **Codebase Intelligence & Refactoring Engine** – [Explore](SYSTEM_DESIGNS/codebase-architecture)  
 - **Self-Healing LLM Pipeline Orchestrator** – [Explore](SYSTEM_DESIGNS/llm-pipeline)  
 - **OpenAPI Dynamic Multi-Agent Orchestration System** – [Explore](SYSTEM_DESIGNS/multi-agent-orchestration)
 
-### Enterprise-Focused (4)
+### Enterprise-Focused
 - **LLM-Based Fraud Pattern Detection Engine (Fintech)** – [Explore](SYSTEM_DESIGNS/fraud-detection-system)  
 - **Smart Contract Analysis & Breach Prediction System (Legal)** – [Explore](SYSTEM_DESIGNS/contract-analysis)  
 - **Cloud Resource Optimization Engine (Enterprise)** – [Explore](SYSTEM_DESIGNS/cloud-resource-optimization)  
