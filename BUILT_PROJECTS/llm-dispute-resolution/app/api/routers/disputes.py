@@ -1,96 +1,113 @@
+from fastapi import APIRouter, HTTPException, Depends
+from app.services.ai_adapter import text_classifier
+from app.services.db import get_db, create_dispute, get_dispute, list_disputes, update_dispute
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from ...domain.schemas import DisputeIn, DisputeOut, Classification, Recommendation, AuditLogOut, AuditEventOut
-from ...core.config import get_settings
-from ...services.orchestrator import process_case, get_dispute_by_id, get_audit_log
-from ...domain.schemas import AuditLogOut, AuditEventOut
-@router.get("/disputes/{dispute_id}/audit", response_model=AuditLogOut)
-async def get_dispute_audit(dispute_id: str):
-    events = await get_audit_log(dispute_id)
-    if not events:
-        raise HTTPException(status_code=404, detail="No audit events found for this dispute")
-    audit_events = [
-        AuditEventOut(
-            step=e.step,
-            timestamp=e.created_at.timestamp(),
-            latency_ms=e.payload_json.get("latency_ms", 0),
-            success=e.payload_json.get("success", True),
-            details={k: v for k, v in e.payload_json.items() if k not in ("latency_ms", "success", "step", "timestamp")}
-        ) for e in events
-    ]
-    return AuditLogOut(case_id=dispute_id, events=audit_events)
-import uuid
+router = APIRouter(prefix="/disputes", tags=["disputes"])
 
-router = APIRouter(tags=["disputes"])
+class DisputeRequest(BaseModel):
+    narrative: str
 
-def _auth(settings=Depends(get_settings), api_key: str | None = None):  # placeholder simple auth injection
-    if settings.api_key:
-        # In a fuller implementation we'd read header; simplified for brevity
-        if api_key != settings.api_key:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="UNAUTHORIZED")
+class DisputeBatchRequest(BaseModel):
+    narratives: List[str]
 
-@router.post("/disputes", response_model=DisputeOut, status_code=201)
-async def create_dispute(payload: DisputeIn, settings=Depends(get_settings)):
-    # Truncate narrative if needed (budget alignment)
-    truncated = False
-    max_len = 2000
-    narrative = payload.narrative
-    if len(narrative) > max_len:
-        narrative = narrative[:max_len]
-        payload.narrative = narrative
-        truncated = True
+class DisputeResponse(BaseModel):
+    id: str
+    narrative: str
+    classification: str | None = None
+    classification_confidence: float | None = None
+    created_at: str | None = None
 
-    dispute_id = f"dsp_{uuid.uuid4().hex[:10]}"
-    classification, enrichment, recommendation, total_latency, _audit = await process_case(dispute_id, payload)
+class RetrainRequest(BaseModel):
+    texts: List[str]
+    labels: List[int]
 
-    return DisputeOut(
-        id=dispute_id,
-        external_ref=payload.external_ref,
-        classification=Classification(**{k: classification[k] for k in ("label", "confidence", "rationale")}),
-        recommendation=Recommendation(**{k: recommendation[k] for k in ("action", "confidence", "rationale")}),
-        truncated=truncated,
-        latency_ms=total_latency
-    )
+class EvaluateRequest(BaseModel):
+    texts: List[str]
+    labels: List[int]
 
+class EvaluateResponse(BaseModel):
+    accuracy: float
 
-@router.get("/disputes/{dispute_id}", response_model=DisputeOut)
-async def get_dispute(dispute_id: str):
-    dispute = await get_dispute_by_id(dispute_id)
-    if not dispute:
+@router.post("/classify", response_model=DisputeResponse)
+def classify_dispute(req: DisputeRequest, db: Session = Depends(get_db)):
+    try:
+        prediction = text_classifier.predict([req.narrative])[0]
+        # For demo, use string label
+        label = "dispute" if prediction == 1 else "not_dispute"
+        dispute = create_dispute(db, req.narrative, label, 1.0)
+        return DisputeResponse(
+            id=dispute.id,
+            narrative=dispute.narrative,
+            classification=dispute.classification,
+            classification_confidence=dispute.classification_confidence,
+            created_at=str(dispute.created_at)
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/classify/batch", response_model=List[int])
+def classify_batch(req: DisputeBatchRequest):
+    try:
+        return text_classifier.predict(req.narratives)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/retrain")
+def retrain_model(req: RetrainRequest):
+    try:
+        text_classifier.retrain(req.texts, req.labels)
+        return {"status": "retrained"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/evaluate", response_model=EvaluateResponse)
+def evaluate_model(req: EvaluateRequest):
+    try:
+        metrics = text_classifier.evaluate(req.texts, req.labels)
+        return EvaluateResponse(**metrics)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/model/health")
+def model_health():
+    return {"healthy": text_classifier.is_healthy()}
+
+@router.get("/", response_model=list[DisputeResponse])
+def get_all_disputes(db: Session = Depends(get_db)):
+    disputes = list_disputes(db)
+    return [DisputeResponse(
+        id=d.id,
+        narrative=d.narrative,
+        classification=d.classification,
+        classification_confidence=d.classification_confidence,
+        created_at=str(d.created_at)
+    ) for d in disputes]
+
+@router.get("/{dispute_id}", response_model=DisputeResponse)
+def get_one_dispute(dispute_id: str, db: Session = Depends(get_db)):
+    d = get_dispute(db, dispute_id)
+    if not d:
         raise HTTPException(status_code=404, detail="Dispute not found")
-    # Reconstruct output (enrichment not persisted, so use static)
-    classification = Classification(
-        label=dispute.classification or "OTHER",
-        confidence=dispute.classification_confidence or 0.0,
-        rationale=dispute.recommendation_rationale.get("rationale") if dispute.recommendation_rationale else ""
-    )
-    recommendation = Recommendation(
-        action=dispute.recommendation_action or "ESCALATE_REVIEW",
-        confidence=dispute.recommendation_confidence or 0.0,
-        rationale=dispute.recommendation_rationale.get("rationale") if dispute.recommendation_rationale else ""
-    )
-    return DisputeOut(
-        id=dispute.id,
-        external_ref=dispute.external_ref,
-        classification=classification,
-        recommendation=recommendation,
-        truncated=False,
-        latency_ms=0
+    return DisputeResponse(
+        id=d.id,
+        narrative=d.narrative,
+        classification=d.classification,
+        classification_confidence=d.classification_confidence,
+        created_at=str(d.created_at)
     )
 
-
-@router.get("/disputes/{dispute_id}/audit", response_model=AuditLogOut)
-async def get_dispute_audit(dispute_id: str):
-    events = await get_audit_log(dispute_id)
-    if not events:
-        raise HTTPException(status_code=404, detail="No audit events found for this dispute")
-    audit_events = [
-        AuditEventOut(
-            step=e.step,
-            timestamp=e.created_at.timestamp(),
-            latency_ms=e.payload_json.get("latency_ms", 0),
-            success=e.payload_json.get("success", True),
-            details={k: v for k, v in e.payload_json.items() if k not in ("latency_ms", "success", "step", "timestamp")}
-        ) for e in events
-    ]
-    return AuditLogOut(case_id=dispute_id, events=audit_events)
+@router.put("/{dispute_id}", response_model=DisputeResponse)
+def update_one_dispute(dispute_id: str, req: DisputeRequest, db: Session = Depends(get_db)):
+    d = update_dispute(db, dispute_id, narrative=req.narrative)
+    if not d:
+        raise HTTPException(status_code=404, detail="Dispute not found")
+    return DisputeResponse(
+        id=d.id,
+        narrative=d.narrative,
+        classification=d.classification,
+        classification_confidence=d.classification_confidence,
+        created_at=str(d.created_at)
+    )

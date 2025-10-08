@@ -11,6 +11,7 @@ from sqlalchemy import select
 
 async def process_case(dispute_id: str, payload: DisputeIn):
     t0 = time.perf_counter()
+
     classification = await run_classification(payload.narrative, payload.amount, payload.currency)
     enrichment = await run_enrichment(dispute_id)
     recommendation = await run_recommendation(classification, enrichment)
@@ -18,6 +19,9 @@ async def process_case(dispute_id: str, payload: DisputeIn):
     metrics.record_classification_latency(classification.get("latency_ms", 0))
     metrics.record_recommendation_latency(recommendation.get("latency_ms", 0))
     metrics.increment_case(classification.get("label"))
+    # Track total LLM cost for this case (classification + recommendation)
+    total_cost = float(classification.get("cost_usd", 0.0)) + float(recommendation.get("cost_usd", 0.0))
+    metrics.record_case_cost(total_cost)
 
     # Persist dispute and audit events
     async for session in get_session():
