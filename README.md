@@ -1,124 +1,61 @@
-# Venkata Portfolio
+# 🏗️ Project Portfolio
 
-This repository contains multiple end-to-end projects, system design notes, and demos focused on backend engineering, cloud-native platforms, and AI integrations.
+This portfolio demonstrates expertise in **backend engineering, cloud-native infrastructure, and AI/LLM multi-agent orchestration**. It includes **end-to-end production-ready projects** and **system design case studies**, highlighting problem-solving at enterprise scale.  
 
-Key directories:
-
-- `Projects/` — Complete projects and demos (each project has its own README). Examples:
-  - `Projects/llm-dispute-resolution` — Dispute resolution MVP and extended system design.
-  - `Projects/llm-fraud-detection` — Fraud detection demos.
-  - `Projects/multi-agent-customer-support` — Multi-agent orchestration demo.
-- `SYSTEM_DESIGNS/` — Architecture documents and case studies.
-- `BLOG/` — Notes and blog drafts.
-
-Quick links:
-
-- Root README for each project lives under `Projects/<project-name>/README.md`.
-- License: [LICENSE](LICENSE)
+> Focus: **Backend, platform, AI-Large Language Models (LLMs), multi-agent orchestration**. All projects reuse **existing AI models** — no new model training.
 
 ---
 
-## Quick Start — Local Backend Demo (llm-dispute-resolution)
+## ⚡ Key Skills
 
-This repository includes a lightweight MVP for dispute classification under `Projects/llm-dispute-resolution`.
-
-1. Open a terminal in the project folder:
-
-```powershell
-cd e:\Desktop\GitHub\VenkataPortfolio\Projects\llm-dispute-resolution
-```
-
-2. Create and activate a virtual environment (Windows example):
-
-```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
-```
-
-3. Install dependencies:
-
-```powershell
-pip install -r requirements.txt
-```
-
-4. Run the backend locally:
-
-```powershell
-uvicorn app.main:app --reload
-```
-
-5. Open the API docs in your browser:
-
-http://127.0.0.1:8000/docs
-
-Use header `x-api-key: changeme` when calling protected endpoints in this demo.
+Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, OpenAI GPT-4, Hugging Face, LangChain
 
 ---
 
-## Example API calls (llm-dispute-resolution)
+## 🔹 End-to-End Builds
 
-Create and classify a dispute (example using curl):
+- **Multi-Agent Dispute Resolution System (Fintech)**  
+  *Value:* Automates dispute classification and resolution, reducing manual effort and potential revenue loss.  
+  *Role/Contributions:* Designed multi-agent orchestration, integrated LLMs, implemented backend APIs, containerized services.  
+  *Tech Stack:* Python (FastAPI), Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI GPT-4, Hugging Face, LangChain  
+  *📂 Explore:* [llmDisputeResolution](BuiltProjects/llmDisputeResolution)
 
-```powershell
-curl -X POST "http://127.0.0.1:8000/disputes/classify" \
-  -H "Content-Type: application/json" \
-  -H "x-api-key: changeme" \
-  -d '{"narrative": "I did not authorize this transaction."}'
-```
+- **Product Recommendation & Inventory Optimization Engine (E-commerce)**  
+  *Value:* Generates personalized recommendations and optimizes inventory to reduce overstock/out-of-stock scenarios.  
+  *Role/Contributions:* Implemented vector embeddings, coordinated multi-agent inventory simulation, developed backend APIs.  
+  *Tech Stack:* Python, Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI embeddings, FAISS/ChromaDB, LangChain  
+  *📂 Explore:* [productRecommendation](BuiltProjects/productRecommendation)
 
-Batch classify:
-
-```powershell
-curl -X POST "http://127.0.0.1:8000/disputes/classify/batch" \
-  -H "Content-Type: application/json" \
-  -H "x-api-key: changeme" \
-  -d '{"narratives": ["Unauthorized charge", "Legitimate purchase"]}'
-```
-
-Retrain model (small example):
-
-```powershell
-curl -X POST "http://127.0.0.1:8000/disputes/retrain" \
-  -H "Content-Type: application/json" \
-  -H "x-api-key: changeme" \
-  -d '{"texts": ["fraudulent purchase", "normal purchase"], "labels": [1,0]}'
-```
-
-Model health:
-
-```powershell
-curl "http://127.0.0.1:8000/disputes/model/health" -H "x-api-key: changeme"
-```
+- **Content Moderation & Engagement Orchestration System (Social)**  
+  *Value:* Automates moderation and engagement scoring, improving platform compliance and user safety.  
+  *Role/Contributions:* Built multi-agent moderation system, backend APIs, orchestrated Rust services for performance.  
+  *Tech Stack:* Python, Rust, PostgreSQL, Redis, Docker/Kubernetes, OpenAI GPT-4, Hugging Face, LangChain  
+  *📂 Explore:* [contentModeration](BuiltProjects/contentModeration)
 
 ---
 
-## Developer checklist (recommended)
+## 🔹 System Design Case Studies
 
-- Create a Python virtualenv and activate it.
-- Install dependencies from the project `requirements.txt` file.
-- Run the backend via `uvicorn app.main:app --reload` and test endpoints via `/docs`.
-- To add a frontend, create a `frontend/` folder and scaffold a Vite + React app; point API calls to `http://127.0.0.1:8000`.
+### AI-Focused
+- **Codebase Intelligence & Refactoring Engine** – [Explore](SystemDesigns/codebaseArchitecture)  
+- **Self-Healing LLM Pipeline Orchestrator** – [Explore](SystemDesigns/llmPipeline)  
+- **OpenAPI Dynamic Multi-Agent Orchestration System** – [Explore](SystemDesigns/multiAgentOrchestration)
 
----
-
----
-
-## Projects Index (high level)
-
-- `Projects/llm-dispute-resolution` — Dispute classification MVP and extended design docs.
-- `Projects/llm-fraud-detection` — Fraud detection experiments.
-- `Projects/llm-predictive-maintenance` — Predictive maintenance examples.
-- `Projects/multi-agent-customer-support` — Chat / agent coordination demos.
-- `Projects/rag-knowledge-retrieval` — Retrieval-augmented generation examples.
+### Enterprise-Focused
+- **LLM-Based Fraud Pattern Detection Engine (Fintech)** – [Explore](SystemDesigns/fraudDetectionSystem)  
+- **Smart Contract Analysis & Breach Prediction System (Legal)** – [Explore](SystemDesigns/contractAnalysis)  
+- **Cloud Resource Optimization Engine (Enterprise)** – [Explore](SystemDesigns/cloudResourceOptimization)  
+- **Workflow Bottleneck Detection & Automation Advisor (Enterprise)** – [Explore](SystemDesigns/workflowBottleneck)
 
 ---
 
-## Recommendations
 
-- Each project folder contains a dedicated `README.md` — open it for project-specific setup, architecture notes, and run instructions.
-- For demos, prefer local runs using the included `requirements.txt` and the FastAPI Swagger UI (`/docs`).
+## 🔹 Blog / Notes
+- **Building LLM Circuit Breakers** – Lessons from multi-agent orchestration, backend reliability patterns.  
+- **Kubernetes Operator Patterns** – Cloud-native operator design for ML and recommendation projects.
 
 ---
 
-## License
+## 🛡️ License
 
 This repository is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
