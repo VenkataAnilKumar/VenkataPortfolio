@@ -12,27 +12,19 @@ Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, Ope
 
 ---
 
-## 🔹 End-to-End Builds
+## 🚀 Projects
 
 - **Multi-Agent Dispute Resolution System (Fintech)**  
-  *Value:* Automates dispute classification and resolution, reducing manual effort and potential revenue loss.  
-  *Role/Contributions:* Designed multi-agent orchestration, integrated LLMs, implemented backend APIs, containerized services.  
-  *Tech Stack:* Python (FastAPI), Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI GPT-4, Hugging Face, LangChain  
-  *📂 Explore:* [llmDisputeResolution](BuiltProjects/llmDisputeResolution)
+	*Value:* Automates dispute classification and resolution, reducing manual effort and potential revenue loss.  
+	*Role/Contributions:* Designed multi-agent orchestration, integrated LLMs, implemented backend APIs, containerized services.  
+	*Tech Stack:* Python (FastAPI), Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI GPT-4, Hugging Face, LangChain  
+	*📂 Explore:* [llmDisputeResolution](BuiltProjects/llmDisputeResolution)
 
 - **Product Recommendation & Inventory Optimization Engine (E-commerce)**  
-  *Value:* Generates personalized recommendations and optimizes inventory to reduce overstock/out-of-stock scenarios.  
-  *Role/Contributions:* Implemented vector embeddings, coordinated multi-agent inventory simulation, developed backend APIs.  
-  *Tech Stack:* Python, Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI embeddings, FAISS/ChromaDB, LangChain  
-  *📂 Explore:* [productRecommendation](BuiltProjects/productRecommendation)
-
-- **Content Moderation & Engagement Orchestration System (Social)**  
-  *Value:* Automates moderation and engagement scoring, improving platform compliance and user safety.  
-  *Role/Contributions:* Built multi-agent moderation system, backend APIs, orchestrated Rust services for performance.  
-  *Tech Stack:* Python, Rust, PostgreSQL, Redis, Docker/Kubernetes, OpenAI GPT-4, Hugging Face, LangChain  
-  *📂 Explore:* [contentModeration](BuiltProjects/contentModeration)
-
----
+	*Value:* Generates personalized recommendations and optimizes inventory to reduce overstock/out-of-stock scenarios.  
+	*Role/Contributions:* Implemented vector embeddings, coordinated multi-agent inventory simulation, developed backend APIs.  
+	*Tech Stack:* Python, Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI embeddings, FAISS/ChromaDB, LangChain  
+	*📂 Explore:* [productRecommendation](BuiltProjects/productRecommendation)
 
 ## 🔹 System Design Case Studies
 

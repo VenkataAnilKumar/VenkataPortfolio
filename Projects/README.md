@@ -34,13 +34,13 @@ I specialize in designing **production-ready AI systems**, orchestrating **LLMs*
 **Key Technologies:** Python, PyTorch, OpenAI LLM, Scikit-learn, FastAPI
 [🔗 Explore Project](./llm-fraud-detection)
 
-### **4. LLM Predictive Maintenance & Operations Platform**
+### **4. Multi-Agent Customer Support Automation Platform**
 
-**Problem:** Equipment failures cause costly downtime.
-**Solution:** Predictive analytics pipelines monitor machinery and forecast maintenance.
-**Focused Areas:** Manufacturing, logistics, utilities, industrial automation
-**Key Technologies:** Python, ML, IoT, Pandas, NumPy, FastAPI
-[🔗 Explore Project](./llm-predictive-maintenance)
+**Problem:** Customer support is slow and inconsistent.
+**Solution:** AI agents autonomously handle queries across channels.
+**Focused Areas:** E-commerce, telecom, SaaS, customer experience platforms
+**Key Technologies:** Python, Multi-Agent LLM, LangChain, FastAPI, REST APIs
+[🔗 Explore Project](./multi-agent-customer-support)
 
 ### **5. Multi-Agent Customer Support Automation Platform**
 
