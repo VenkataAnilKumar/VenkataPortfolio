@@ -29,14 +29,14 @@ Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, Ope
 ## 🔹 System Design Case Studies
 
 ### AI-Focused
-- **Codebase Intelligence & Refactoring Engine** – [Explore](SystemDesigns/codebaseArchitecture)  
-- **Self-Healing LLM Pipeline Orchestrator** – [Explore](SystemDesigns/llmPipeline)  
-- **OpenAPI Dynamic Multi-Agent Orchestration System** – [Explore](SystemDesigns/multiAgentOrchestration)
+- **Codebase Intelligence & Refactoring Engine** – [Explore](System_Design/codebase-architecture)  
+- **Self-Healing LLM Pipeline Orchestrator** – [Explore](System_Design/llm-pipeline)  
+- **OpenAPI Dynamic Multi-Agent Orchestration System** – [Explore](System_Design/multi-agent-orchestration)
 
 ### Enterprise-Focused
-- **LLM-Based Fraud Pattern Detection Engine** – [Explore](SystemDesigns/fraudDetectionSystem)  
-- **Cloud Resource Optimization Engine** – [Explore](SystemDesigns/cloudResourceOptimization)  
-- **Workflow Bottleneck Detection & Automation Advisor** – [Explore](SystemDesigns/workflowBottleneck)
+- **LLM-Based Fraud Pattern Detection Engine** – [Explore](System_Design/fraud-detection-system)  
+- **Cloud Resource Optimization Engine** – [Explore](System_Design/cloud-resource-optimization)  
+- **Workflow Bottleneck Detection & Automation Advisor** – [Explore](System_Design/workflow-bottleneck)
 
 ---
 
