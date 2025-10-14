@@ -42,15 +42,8 @@ I specialize in designing **production-ready AI systems**, orchestrating **LLMs*
 **Key Technologies:** Python, Multi-Agent LLM, LangChain, FastAPI, REST APIs
 [🔗 Explore Project](./multi-agent-customer-support)
 
-### **5. Multi-Agent Customer Support Automation Platform**
 
-**Problem:** Customer support is slow and inconsistent.
-**Solution:** AI agents autonomously handle queries across channels.
-**Focused Areas:** E-commerce, telecom, SaaS, customer experience platforms
-**Key Technologies:** Python, Multi-Agent LLM, LangChain, FastAPI, REST APIs
-[🔗 Explore Project](./multi-agent-customer-support)
-
-### **6. Multi-Agent Supply Chain Optimization Platform**
+### **5. Multi-Agent Supply Chain Optimization Platform**
 
 **Problem:** Supply chain operations are complex and require continuous optimization.
 **Solution:** AI agents optimize inventory, demand forecasting, and logistics in real-time.
