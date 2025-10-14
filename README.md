@@ -14,17 +14,17 @@ Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, Ope
 
 ## 🚀 Projects
 
-- **Multi-Agent Dispute Resolution System (Fintech)**  
-	*Value:* Automates dispute classification and resolution, reducing manual effort and potential revenue loss.  
-	*Role/Contributions:* Designed multi-agent orchestration, integrated LLMs, implemented backend APIs, containerized services.  
-	*Tech Stack:* Python (FastAPI), Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI GPT-4, Hugging Face, LangChain  
-	*📂 Explore:* [llmDisputeResolution](BuiltProjects/llmDisputeResolution)
+**Multi-Agent Supply Chain Optimization (Logistics/E-commerce)**
+*Value:* Optimizes inventory, production, and delivery decisions across multiple stakeholders, reducing costs and improving supply chain efficiency.
+*Role/Contributions:* Designed multi-agent simulation, implemented reinforcement learning for demand prediction, orchestrated agent collaboration, and built scalable backend APIs.
+*Tech Stack:* Python (FastAPI), Ray/RLlib, PyTorch, PostgreSQL, Docker/Kubernetes, Pandas/Numpy, LangChain
+*📂 Explore:* [multi-agent-supply-chain](Projects/multi-agent-supply-chain)
 
-- **Product Recommendation & Inventory Optimization Engine (E-commerce)**  
-	*Value:* Generates personalized recommendations and optimizes inventory to reduce overstock/out-of-stock scenarios.  
-	*Role/Contributions:* Implemented vector embeddings, coordinated multi-agent inventory simulation, developed backend APIs.  
-	*Tech Stack:* Python, Go, PostgreSQL, Redis, Docker/Kubernetes, OpenAI embeddings, FAISS/ChromaDB, LangChain  
-	*📂 Explore:* [productRecommendation](BuiltProjects/productRecommendation)
+**Autonomous Inventory Rebalancing Engine (Retail/E-commerce)**
+*Value:* Maintains optimal stock levels across warehouses, reduces stock-outs and overstock, and improves revenue and operational efficiency.
+*Role/Contributions:* Designed inventory prediction algorithms, integrated multi-agent coordination, developed backend APIs, containerized services, and implemented automated rebalancing workflows.
+*Tech Stack:* Python (FastAPI), Prophet/ARIMA, PostgreSQL, Redis, Docker/Kubernetes, GPT-4/5, LangChain
+*📂 Explore:* [autonomous-inventory-rebalancing](Projects/autonomous-inventory-rebalancing)
 
 ## 🔹 System Design Case Studies
 
@@ -34,10 +34,9 @@ Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, Ope
 - **OpenAPI Dynamic Multi-Agent Orchestration System** – [Explore](SystemDesigns/multiAgentOrchestration)
 
 ### Enterprise-Focused
-- **LLM-Based Fraud Pattern Detection Engine (Fintech)** – [Explore](SystemDesigns/fraudDetectionSystem)  
-- **Smart Contract Analysis & Breach Prediction System (Legal)** – [Explore](SystemDesigns/contractAnalysis)  
-- **Cloud Resource Optimization Engine (Enterprise)** – [Explore](SystemDesigns/cloudResourceOptimization)  
-- **Workflow Bottleneck Detection & Automation Advisor (Enterprise)** – [Explore](SystemDesigns/workflowBottleneck)
+- **LLM-Based Fraud Pattern Detection Engine** – [Explore](SystemDesigns/fraudDetectionSystem)  
+- **Cloud Resource Optimization Engine** – [Explore](SystemDesigns/cloudResourceOptimization)  
+- **Workflow Bottleneck Detection & Automation Advisor** – [Explore](SystemDesigns/workflowBottleneck)
 
 ---
 
