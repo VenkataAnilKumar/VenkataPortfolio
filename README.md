@@ -41,12 +41,6 @@ Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, Ope
 ---
 
 
-## 🔹 Blog / Notes
-- **Building LLM Circuit Breakers** – Lessons from multi-agent orchestration, backend reliability patterns.  
-- **Kubernetes Operator Patterns** – Cloud-native operator design for ML and recommendation projects.
-
----
-
-## 🛡️ License
+## ️ License
 
 This repository is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
