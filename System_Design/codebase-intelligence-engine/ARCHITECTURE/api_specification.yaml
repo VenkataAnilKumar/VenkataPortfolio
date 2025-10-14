@@ -1,0 +1,1216 @@
+openapi: 3.1.0
+info:
+  title: Codebase Intelligence Engine API
+  description: |
+    The Codebase Intelligence Engine provides comprehensive code analysis, refactoring planning, and safety validation for large codebases.
+    
+    ## Authentication
+    All API endpoints require authentication via Bearer tokens (JWT) or API keys.
+    
+    ## Rate Limiting
+    - Public endpoints: 1000 requests/hour
+    - Authenticated endpoints: 10,000 requests/hour
+    - Enterprise endpoints: Unlimited with SLA
+    
+    ## Versioning
+    API versioning follows semantic versioning with backward compatibility guarantees.
+  version: 1.0.0
+  contact:
+    name: Codebase Intelligence Team
+    email: api-support@codebase-intelligence.com
+    url: https://docs.codebase-intelligence.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.codebase-intelligence.com/v1
+    description: Production server
+  - url: https://api-staging.codebase-intelligence.com/v1
+    description: Staging server
+
+security:
+  - bearerAuth: []
+  - apiKeyAuth: []
+
+paths:
+  # Repository Management
+  /repositories:
+    get:
+      summary: List repositories
+      description: Retrieve a paginated list of repositories accessible to the authenticated user
+      tags:
+        - Repositories
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/SortParam'
+        - name: status
+          in: query
+          description: Filter by repository status
+          schema:
+            type: string
+            enum: [active, paused, error, scanning]
+        - name: provider
+          in: query
+          description: Filter by Git provider
+          schema:
+            type: string
+            enum: [github, gitlab, azure, bitbucket]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Repository'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      summary: Register a new repository
+      description: Register a new repository for analysis
+      tags:
+        - Repositories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRepositoryRequest'
+      responses:
+        '201':
+          description: Repository created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repository'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /repositories/{repositoryId}:
+    get:
+      summary: Get repository details
+      description: Retrieve detailed information about a specific repository
+      tags:
+        - Repositories
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repository'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Update repository configuration
+      description: Update repository settings and scan configuration
+      tags:
+        - Repositories
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRepositoryRequest'
+      responses:
+        '200':
+          description: Repository updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repository'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Unregister repository
+      description: Remove repository from analysis (soft delete)
+      tags:
+        - Repositories
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+      responses:
+        '204':
+          description: Repository deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /repositories/{repositoryId}/scan:
+    post:
+      summary: Trigger repository scan
+      description: Initiate a full or incremental scan of the repository
+      tags:
+        - Analysis
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [full, incremental, differential]
+                  default: incremental
+                priority:
+                  type: string
+                  enum: [low, normal, high, urgent]
+                  default: normal
+                include_patterns:
+                  type: array
+                  items:
+                    type: string
+                exclude_patterns:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '202':
+          description: Scan initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanJob'
+        '409':
+          description: Scan already in progress
+
+  /repositories/{repositoryId}/scan-status:
+    get:
+      summary: Get scan status
+      description: Retrieve the current status of repository scanning
+      tags:
+        - Analysis
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+      responses:
+        '200':
+          description: Scan status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanStatus'
+
+  # Analysis & Findings
+  /repositories/{repositoryId}/findings:
+    get:
+      summary: Get analysis findings
+      description: Retrieve code analysis findings for a repository
+      tags:
+        - Analysis
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: severity
+          in: query
+          description: Filter by finding severity
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [critical, high, medium, low]
+        - name: type
+          in: query
+          description: Filter by finding type
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [code_smell, security, performance, duplicate, architecture]
+        - name: status
+          in: query
+          description: Filter by finding status
+          schema:
+            type: string
+            enum: [new, acknowledged, resolved, false_positive]
+      responses:
+        '200':
+          description: Findings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Finding'
+                  summary:
+                    $ref: '#/components/schemas/FindingSummary'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /findings/{findingId}:
+    get:
+      summary: Get finding details
+      description: Retrieve detailed information about a specific finding
+      tags:
+        - Analysis
+      parameters:
+        - name: findingId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Finding details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Finding'
+
+    patch:
+      summary: Update finding status
+      description: Update the status or acknowledgment of a finding
+      tags:
+        - Analysis
+      parameters:
+        - name: findingId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [acknowledged, resolved, false_positive]
+                comment:
+                  type: string
+                  maxLength: 1000
+              required:
+                - status
+      responses:
+        '200':
+          description: Finding updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Finding'
+
+  # Refactoring Plans
+  /repositories/{repositoryId}/plans:
+    get:
+      summary: List refactoring plans
+      description: Retrieve refactoring plans for a repository
+      tags:
+        - Refactoring
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          description: Filter by plan status
+          schema:
+            type: string
+            enum: [draft, pending_approval, approved, executing, completed, failed]
+      responses:
+        '200':
+          description: Plans retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RefactoringPlan'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      summary: Generate refactoring plan
+      description: Create a new refactoring plan based on findings
+      tags:
+        - Refactoring
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePlanRequest'
+      responses:
+        '201':
+          description: Plan created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefactoringPlan'
+
+  /plans/{planId}:
+    get:
+      summary: Get plan details
+      description: Retrieve detailed information about a refactoring plan
+      tags:
+        - Refactoring
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Plan details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefactoringPlan'
+
+  /plans/{planId}/preview:
+    get:
+      summary: Preview plan changes
+      description: Get a preview of the changes that would be made by executing the plan
+      tags:
+        - Refactoring
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Plan preview generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanPreview'
+
+  /plans/{planId}/execute:
+    post:
+      summary: Execute refactoring plan
+      description: Execute the refactoring plan and create pull requests
+      tags:
+        - Refactoring
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                execution_mode:
+                  type: string
+                  enum: [dry_run, create_pr, auto_merge]
+                  default: create_pr
+                branch_strategy:
+                  type: string
+                  enum: [single_branch, step_by_step, parallel]
+                  default: single_branch
+      responses:
+        '202':
+          description: Plan execution initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionJob'
+
+  # Graph & Metrics
+  /repositories/{repositoryId}/graph:
+    get:
+      summary: Get code graph data
+      description: Retrieve code intelligence graph data for visualization
+      tags:
+        - Graph
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+        - name: node_types
+          in: query
+          description: Filter by node types
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [file, function, class, variable, module]
+        - name: depth
+          in: query
+          description: Maximum depth for graph traversal
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 3
+        - name: root_nodes
+          in: query
+          description: Starting nodes for graph traversal
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Graph data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphData'
+
+  /repositories/{repositoryId}/metrics:
+    get:
+      summary: Get repository metrics
+      description: Retrieve comprehensive metrics for a repository
+      tags:
+        - Metrics
+      parameters:
+        - $ref: '#/components/parameters/RepositoryIdParam'
+        - name: time_range
+          in: query
+          description: Time range for historical metrics
+          schema:
+            type: string
+            enum: [1d, 7d, 30d, 90d, 1y]
+            default: 30d
+      responses:
+        '200':
+          description: Metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryMetrics'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  parameters:
+    RepositoryIdParam:
+      name: repositoryId
+      in: path
+      required: true
+      description: Repository identifier
+      schema:
+        type: string
+        format: uuid
+    
+    PageParam:
+      name: page
+      in: query
+      description: Page number for pagination
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    
+    LimitParam:
+      name: limit
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    
+    SortParam:
+      name: sort
+      in: query
+      description: Sort order
+      schema:
+        type: string
+        enum: [created_asc, created_desc, name_asc, name_desc, updated_asc, updated_desc]
+        default: created_desc
+
+  schemas:
+    Repository:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        display_name:
+          type: string
+          maxLength: 255
+        url:
+          type: string
+          format: uri
+        provider:
+          type: string
+          enum: [github, gitlab, azure, bitbucket]
+        default_branch:
+          type: string
+          default: main
+        scan_config:
+          $ref: '#/components/schemas/ScanConfig'
+        status:
+          type: string
+          enum: [active, paused, error, scanning]
+          readOnly: true
+        last_scan:
+          type: string
+          format: date-time
+          readOnly: true
+        metrics:
+          $ref: '#/components/schemas/RepositoryMetrics'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - name
+        - url
+        - provider
+
+    ScanConfig:
+      type: object
+      properties:
+        frequency:
+          type: string
+          enum: [manual, hourly, daily, weekly]
+          default: daily
+        include_patterns:
+          type: array
+          items:
+            type: string
+          default: ["**/*"]
+        exclude_patterns:
+          type: array
+          items:
+            type: string
+          default: ["node_modules/**", ".git/**", "*.min.js"]
+        max_file_size:
+          type: integer
+          minimum: 1
+          maximum: 104857600  # 100MB
+          default: 10485760   # 10MB
+        languages:
+          type: array
+          items:
+            type: string
+          description: Specific languages to analyze (empty = all supported)
+
+    Finding:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        repository_id:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          type: string
+          enum: [code_smell, security, performance, duplicate, architecture]
+        severity:
+          type: string
+          enum: [critical, high, medium, low]
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 2000
+        location:
+          $ref: '#/components/schemas/CodeLocation'
+        evidence:
+          type: object
+          properties:
+            metrics:
+              type: object
+            similar_locations:
+              type: array
+              items:
+                $ref: '#/components/schemas/CodeLocation'
+            rule_id:
+              type: string
+        recommendation:
+          $ref: '#/components/schemas/Recommendation'
+        status:
+          type: string
+          enum: [new, acknowledged, resolved, false_positive]
+          default: new
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    CodeLocation:
+      type: object
+      properties:
+        file_path:
+          type: string
+        line_start:
+          type: integer
+          minimum: 1
+        line_end:
+          type: integer
+          minimum: 1
+        column_start:
+          type: integer
+          minimum: 1
+        column_end:
+          type: integer
+          minimum: 1
+      required:
+        - file_path
+        - line_start
+
+    Recommendation:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [extract_method, rename, move_class, remove_duplicate, refactor, ignore]
+        description:
+          type: string
+          maxLength: 1000
+        effort_estimate:
+          type: integer
+          description: Estimated effort in hours
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 10
+        automated:
+          type: boolean
+          description: Whether this can be automatically fixed
+
+    RefactoringPlan:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        repository_id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 2000
+        findings:
+          type: array
+          items:
+            type: string
+            format: uuid
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefactoringStep'
+        total_risk_score:
+          type: number
+          minimum: 0
+          maximum: 1
+          readOnly: true
+        total_effort_estimate:
+          type: integer
+          description: Total estimated effort in hours
+          readOnly: true
+        status:
+          type: string
+          enum: [draft, pending_approval, approved, executing, completed, failed]
+          default: draft
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    RefactoringStep:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [extract_method, rename, move_class, remove_duplicate, update_dependency]
+        description:
+          type: string
+          maxLength: 1000
+        files:
+          type: array
+          items:
+            type: string
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileChange'
+        dependencies:
+          type: array
+          items:
+            type: integer
+          description: Step IDs that must complete before this step
+        risk_score:
+          type: number
+          minimum: 0
+          maximum: 1
+        effort_estimate:
+          type: integer
+          description: Estimated effort in hours
+
+    FileChange:
+      type: object
+      properties:
+        file_path:
+          type: string
+        operation:
+          type: string
+          enum: [create, modify, delete, rename]
+        content:
+          type: string
+          description: New file content for create/modify operations
+        diff:
+          type: string
+          description: Unified diff format
+        line_number:
+          type: integer
+          minimum: 1
+
+    CreateRepositoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        display_name:
+          type: string
+          maxLength: 255
+        url:
+          type: string
+          format: uri
+        provider:
+          type: string
+          enum: [github, gitlab, azure, bitbucket]
+        credentials:
+          type: object
+          properties:
+            token:
+              type: string
+              format: password
+            username:
+              type: string
+            ssh_key:
+              type: string
+              format: password
+        scan_config:
+          $ref: '#/components/schemas/ScanConfig'
+      required:
+        - name
+        - url
+        - provider
+        - credentials
+
+    UpdateRepositoryRequest:
+      type: object
+      properties:
+        display_name:
+          type: string
+          maxLength: 255
+        scan_config:
+          $ref: '#/components/schemas/ScanConfig'
+        status:
+          type: string
+          enum: [active, paused]
+
+    CreatePlanRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 2000
+        findings:
+          type: array
+          items:
+            type: string
+            format: uuid
+        options:
+          type: object
+          properties:
+            max_files_per_step:
+              type: integer
+              minimum: 1
+              maximum: 50
+              default: 10
+            max_risk_score:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 0.7
+            prefer_automated:
+              type: boolean
+              default: true
+      required:
+        - title
+        - findings
+
+    ScanJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        repository_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [full, incremental, differential]
+        status:
+          type: string
+          enum: [queued, running, completed, failed]
+        progress:
+          type: integer
+          minimum: 0
+          maximum: 100
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+
+    ScanStatus:
+      type: object
+      properties:
+        current_job:
+          $ref: '#/components/schemas/ScanJob'
+        last_successful_scan:
+          type: string
+          format: date-time
+        next_scheduled_scan:
+          type: string
+          format: date-time
+        scan_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScanJob'
+
+    FindingSummary:
+      type: object
+      properties:
+        total:
+          type: integer
+        by_severity:
+          type: object
+          properties:
+            critical:
+              type: integer
+            high:
+              type: integer
+            medium:
+              type: integer
+            low:
+              type: integer
+        by_type:
+          type: object
+          properties:
+            code_smell:
+              type: integer
+            security:
+              type: integer
+            performance:
+              type: integer
+            duplicate:
+              type: integer
+            architecture:
+              type: integer
+
+    GraphData:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/GraphNode'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/GraphEdge'
+        metadata:
+          type: object
+          properties:
+            total_nodes:
+              type: integer
+            total_edges:
+              type: integer
+            generated_at:
+              type: string
+              format: date-time
+
+    GraphNode:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [file, function, class, variable, module]
+        name:
+          type: string
+        properties:
+          type: object
+        location:
+          $ref: '#/components/schemas/CodeLocation'
+
+    GraphEdge:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        type:
+          type: string
+          enum: [calls, inherits, imports, depends_on, contains]
+        properties:
+          type: object
+
+    RepositoryMetrics:
+      type: object
+      properties:
+        code_stats:
+          type: object
+          properties:
+            total_files:
+              type: integer
+            total_lines:
+              type: integer
+            languages:
+              type: object
+              additionalProperties:
+                type: integer
+        quality_metrics:
+          type: object
+          properties:
+            technical_debt_ratio:
+              type: number
+            test_coverage:
+              type: number
+            code_complexity:
+              type: number
+            duplication_ratio:
+              type: number
+        trend_data:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+              metrics:
+                type: object
+
+    PlanPreview:
+      type: object
+      properties:
+        plan_id:
+          type: string
+          format: uuid
+        file_changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileChange'
+        impact_analysis:
+          type: object
+          properties:
+            affected_files:
+              type: integer
+            test_coverage_impact:
+              type: number
+            risk_assessment:
+              type: string
+              enum: [low, medium, high]
+        generated_at:
+          type: string
+          format: date-time
+
+    ExecutionJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        plan_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [queued, running, completed, failed]
+        execution_mode:
+          type: string
+          enum: [dry_run, create_pr, auto_merge]
+        results:
+          type: object
+          properties:
+            pull_requests:
+              type: array
+              items:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    format: uri
+                  step_id:
+                    type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total_pages:
+          type: integer
+        total_items:
+          type: integer
+        has_next:
+          type: boolean
+        has_previous:
+          type: boolean
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - code
+        - message
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    Conflict:
+      description: Resource conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+tags:
+  - name: Repositories
+    description: Repository management operations
+  - name: Analysis
+    description: Code analysis and findings
+  - name: Refactoring
+    description: Refactoring plan management
+  - name: Graph
+    description: Code intelligence graph operations
+  - name: Metrics
+    description: Repository and code metrics
