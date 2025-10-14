@@ -29,7 +29,7 @@ Python, Go, Rust, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, Terraform, Ope
 ## 🔹 System Design Case Studies
 
 ### AI-Focused
-- **Codebase Intelligence & Refactoring Engine** – [Explore](System_Design/codebase-architecture)  
+- **Codebase Intelligence & Refactoring Engine** – [Explore](System_Design/codebase-intelligence-engine)  
 - **Self-Healing LLM Pipeline Orchestrator** – [Explore](System_Design/llm-pipeline)  
 - **OpenAPI Dynamic Multi-Agent Orchestration System** – [Explore](System_Design/multi-agent-orchestration)
 
